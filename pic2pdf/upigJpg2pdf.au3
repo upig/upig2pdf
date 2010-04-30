@@ -4,9 +4,9 @@
 
 
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
-#AutoIt3Wrapper_icon=upig2prc.ico
-#AutoIt3Wrapper_Res_Comment=upig2prc by 31531640@qq.com http://17memo.com
-#AutoIt3Wrapper_Res_Description=upig2prc txtlrf
+#AutoIt3Wrapper_icon=upigJpg2pdf.ico
+#AutoIt3Wrapper_Res_Comment=upigJpg2pdf by 31531640@qq.com http://17memo.com
+#AutoIt3Wrapper_Res_Description=upigJpg2pdf txtlrf
 #AutoIt3Wrapper_Res_Fileversion=9.2.25.24
 #AutoIt3Wrapper_Res_Language=2052
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
@@ -21,8 +21,8 @@
 #include <StaticConstants.au3>
 #include <WindowsConstants.au3>
 
-#Region ### START Koda GUI section ### Form=d:\3_appdata\microsoft\desktop\upig2prc\新版\ui.kxf
-$dlgMain = GUICreate("upig2prc (10.4.28.5) 将Txt批量转换到prc(Kindle电子书)", 640, 465, 193, 115, -1, 0x00000018)
+#Region ### START Koda GUI section ### Form=d:\3_appdata\microsoft\desktop\upigJpg2pdf\新版\ui.kxf
+$dlgMain = GUICreate("upigJpg2pdf (10.4.28.5) 将Txt批量转换到prc(Kindle电子书)", 640, 465, 193, 115, -1, 0x00000018)
 $ctlEditOutput = GUICtrlCreateEdit("", 8, 116, 617, 337, BitOR($ES_AUTOVSCROLL,$ES_AUTOHSCROLL,$ES_READONLY,$ES_WANTRETURN,$WS_HSCROLL,$WS_VSCROLL))
 GUICtrlSetData(-1, "")
 $ctlEditFileInput = GUICtrlCreateEdit("", 8, 116, 617, 337, BitOR($ES_AUTOVSCROLL,$ES_AUTOHSCROLL,$ES_READONLY,$ES_WANTRETURN,$WS_HSCROLL,$WS_VSCROLL))
@@ -76,15 +76,15 @@ Global $g_oIE = _IECreate ("http://17memo.com/forums/forumdisplay.php?fid=2&filt
 Global $g_errCount = 0
 Global $g_totalFileCount = 0;
 Global $g_tempFileDir = @ScriptDir & "\__temp_upig_"
-Global $g_inifileName = @ScriptDir & "\upig2prc.ini"
+Global $g_inifileName = @ScriptDir & "\upigJpg2pdf.ini"
 Global $g_iniSection = "Setting20"
 ;GUICtrlSetData($ctlEditPrefix,			IniRead($g_inifileName, $g_iniSection, "$ctlEditPrefix", 			"e."))
 ;GUICtrlSetData($ctlComboEncoding, 	" ",IniRead($g_inifileName, $g_iniSection, "$ctlComboEncoding", 		"普通编码"))
 GUICtrlSetData($ctlEditPathOutput, 		IniRead($g_inifileName, $g_iniSection, "$ctlEditPathOutput", 		""))
-;GUICtrlSetData($ctlEditParamTxt2lrf, 	IniRead($g_inifileName, $g_iniSection, "$ctlEditParamTxt2lrf", 		"--author=upig2prc --left-margin=0 --right-margin=0 --top-margin=0 --bottom-margin=0 --override-css=""code {font-family: 'Swis721 BT'}"""))
+;GUICtrlSetData($ctlEditParamTxt2lrf, 	IniRead($g_inifileName, $g_iniSection, "$ctlEditParamTxt2lrf", 		"--author=upigJpg2pdf --left-margin=0 --right-margin=0 --top-margin=0 --bottom-margin=0 --override-css=""code {font-family: 'Swis721 BT'}"""))
 Global $g_bEngilsh = 					IniRead($g_inifileName, $g_iniSection, "$g_bEngilsh", 			False)
 Global $g_bUseOutputPath= 				IniRead($g_inifileName, $g_iniSection, "$g_bUseOutputPath", 	False)
-Global $g_ToolName = 					IniRead($g_inifileName, $g_iniSection, "$g_ToolName", 			"upigcmd")
+Global $g_ToolName = 					IniRead($g_inifileName, $g_iniSection, "$g_ToolName", 			"jpg2pdf")
 Global $g_titleMaxStrLen = 				IniRead($g_inifileName, $g_iniSection, "$g_titleMaxStrLen", 	70)
 Global $g_titleWord = 					IniRead($g_inifileName, $g_iniSection, "$g_titleWord", 			"(?i)CHAPTER|.{0,1}第{0,1}[ 　]{0,10}[序0-9０１２３４５６７８９〇一二三四五六七八九个十百千万零壹贰叁肆伍陆柒捌玖拾佰仟萬]{1,15}[ 　]{0,10}[章|回|卷|篇|节|部|集].{0,1}")
 Global $g_titleWordInvallid = 			IniRead($g_inifileName, $g_iniSection, "$g_titleWordInvallid", 	"回合|节课|部分")
@@ -102,11 +102,11 @@ Global $g_reg = 						IniRead($g_inifileName, $g_iniSection, "$g_reg", 				-1)
 
 
 ;for debug
-If $g_bRelease==False Then _DebugSetup("upig2prc")
+If $g_bRelease==False Then _DebugSetup("upigJpg2pdf")
 
 ;GUICtrlSetState(
 
-;"upig2prc工具用于将中文txt文件批量转换为lrf文件" & @CRLF & @CRLF & "请将需要转换的文件或文件夹拖进来" & @CRLF & "支持多个文件，文件夹一起拖" & @CRLF &"只支持遍历一级文件夹"&@CRLF&@CRLF &@CRLF &@CRLF &@CRLF &@CRLF & "注意:运行本软件先得安装Calibre(http://calibre.kovidgoyal.net)" & @CRLF & "说明:文件转换出错或出现乱码后可尝试修改GBK等参数" & @CRLF & "联系:有什么Bug欢迎反馈给我(31531640@qq.com)"
+;"upigJpg2pdf工具用于将中文txt文件批量转换为lrf文件" & @CRLF & @CRLF & "请将需要转换的文件或文件夹拖进来" & @CRLF & "支持多个文件，文件夹一起拖" & @CRLF &"只支持遍历一级文件夹"&@CRLF&@CRLF &@CRLF &@CRLF &@CRLF &@CRLF & "注意:运行本软件先得安装Calibre(http://calibre.kovidgoyal.net)" & @CRLF & "说明:文件转换出错或出现乱码后可尝试修改GBK等参数" & @CRLF & "联系:有什么Bug欢迎反馈给我(31531640@qq.com)"
 GUICtrlSetState($ctlEditFileInput, $GUI_DROPACCEPTED)
 GUICtrlSetData($ctlEditOutput, $helpStr)
 GUICtrlSetData($ctlEditFileInput, "")
@@ -138,16 +138,16 @@ EndIf
 ;DirCreate($g_tempFileDir)
 
 If $g_reg ==-1 Then
-	RegWrite("HKEY_CLASSES_ROOT\txtfile\shell\A用&upig2prc转换\command", "", "REG_SZ", @ScriptFullPath&" ""%1""")
-	RegWrite("HKEY_CLASSES_ROOT\txtfile\shell\A用&upig2prc转换\", "", "REG_SZ", "用&upig2prc转换")
-	RegWrite("HKEY_CLASSES_ROOT\Folder\shell\A用&upig2prc转换\command", "", "REG_SZ", @ScriptFullPath&" ""%1""")
-	RegWrite("HKEY_CLASSES_ROOT\Folder\shell\A用&upig2prc转换\", "", "REG_SZ", "用&upig2prc转换")
+	RegWrite("HKEY_CLASSES_ROOT\txtfile\shell\A用&upigJpg2pdf转换\command", "", "REG_SZ", @ScriptFullPath&" ""%1""")
+	RegWrite("HKEY_CLASSES_ROOT\txtfile\shell\A用&upigJpg2pdf转换\", "", "REG_SZ", "用&upigJpg2pdf转换")
+	RegWrite("HKEY_CLASSES_ROOT\Folder\shell\A用&upigJpg2pdf转换\command", "", "REG_SZ", @ScriptFullPath&" ""%1""")
+	RegWrite("HKEY_CLASSES_ROOT\Folder\shell\A用&upigJpg2pdf转换\", "", "REG_SZ", "用&upigJpg2pdf转换")
 	$g_reg = 1
 EndIf
 
 If $g_reg ==0 Then
-	RegDelete("HKEY_CLASSES_ROOT\txtfile\shell\A用&upig2prc转换\")
-	RegDelete("HKEY_CLASSES_ROOT\Folder\shell\A用&upig2prc转换\")
+	RegDelete("HKEY_CLASSES_ROOT\txtfile\shell\A用&upigJpg2pdf转换\")
+	RegDelete("HKEY_CLASSES_ROOT\Folder\shell\A用&upigJpg2pdf转换\")
 EndIf
 
 Global $g_BookListReady = False
@@ -253,7 +253,7 @@ Func IceLogMsg($LogStr)
 EndFunc
 
 Func ConvertDir($strDir)
-	Local $pathOutPut = GUICtrlRead($ctlEditPathOutput)&"\"
+	Local $pathOutPut = GUICtrlRead($ctlEditPathOutput)
 	If StringIsSpace(GUICtrlRead($ctlEditPathOutput)) Then $pathOutPut=""
 	If $g_bUseOutputPath==False Then $pathOutPut=""
 	Local $outputParam=""
@@ -264,7 +264,7 @@ Func ConvertDir($strDir)
 
 	Local $script_path = FileGetShortName(@ScriptDir)
 
-	Local $cmd = @ComSpec & " /c """"" & $script_path& '\'&$g_ToolName &""" "& $outputParam & " """ & $strDir & """""" 
+	Local $cmd = @ComSpec & " /c """"" & $script_path& '\'&$g_ToolName &""" "& $outputParam & """ """ & $strDir & """""" 
 	
 	ConsoleWrite($cmd)
 	Local $pID = Run($cmd, $strDir, @SW_HIDE, $STDERR_CHILD+$STDOUT_CHILD)

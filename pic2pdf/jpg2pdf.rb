@@ -11,6 +11,7 @@ require 'prawn'
 require 'fileutils'
 
 options = {}
+puts ARGV.inspect
 
 optparse = OptionParser.new do|opts|
   # Set a banner, displayed at the top
@@ -42,8 +43,8 @@ if !File.directory?(input_path)
 end
 puts input_path
 base_name = File.basename(input_path)
+output_path =input_path[0...-base_name.length] 
 
-output_path = input_path
 if options[:output]!=''
   output_path = options[:output]
 end
@@ -53,10 +54,10 @@ if File.exist?(temp_path)
   $stderr.puts "#{temp_path} 已经存在，请先删除之" 
   exit
 end
+Dir.mkdir(temp_path) 
 
 $pdf_option = {:page_size=>[396.85, 575.43], :margin=>[0,0,0,2], :compress=>true}
 
-Dir.mkdir(temp_path) unless File.exist?(temp_path)
 output_file_name = File.join(output_path, "#{base_name}.pdf")
 puts output_file_name
 

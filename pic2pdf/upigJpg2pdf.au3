@@ -22,7 +22,7 @@
 #include <WindowsConstants.au3>
 
 #Region ### START Koda GUI section ### Form=d:\3_appdata\microsoft\desktop\upigJpg2pdf\新版\ui.kxf
-$dlgMain = GUICreate("upigJpg2pdf (10.4.28.5) 将Txt批量转换到prc(Kindle电子书)", 640, 465, 193, 115, -1, 0x00000018)
+$dlgMain = GUICreate("upigJpg2pdf (10.4.28.5) 将Jpg文件夹批量转换到pdf文件(Kindle Dx专用)", 640, 465, 193, 115, -1, 0x00000018)
 $ctlEditOutput = GUICtrlCreateEdit("", 8, 116, 617, 337, BitOR($ES_AUTOVSCROLL,$ES_AUTOHSCROLL,$ES_READONLY,$ES_WANTRETURN,$WS_HSCROLL,$WS_VSCROLL))
 GUICtrlSetData(-1, "")
 $ctlEditFileInput = GUICtrlCreateEdit("", 8, 116, 617, 337, BitOR($ES_AUTOVSCROLL,$ES_AUTOHSCROLL,$ES_READONLY,$ES_WANTRETURN,$WS_HSCROLL,$WS_VSCROLL))
@@ -49,11 +49,11 @@ $ctlCheckUseOutputPath = GUICtrlCreateCheckbox("输出路径：", 180, 70, 81, 17)
 $Label4 = GUICtrlCreateLabel("子进度", 440, 8, 40, 17)
 $ctlBtnVist17memo = GUICtrlCreateButton("去和书友交流", 438, 64, 107, 25, 0)
 $ctlBtnHelp = GUICtrlCreateButton("帮助", 552, 64, 67, 25, 0)
-$Label8 = GUICtrlCreateLabel("请将txt文件或文件夹拖入到下面的文本框中。upig出品(31531640@qq.com)", 8,36, 400, 17)
+$Label8 = GUICtrlCreateLabel("请将含有jpg的文件夹拖入到下面的文本框中。upig出品(31531640@qq.com)", 8,36, 400, 17)
 GUISetState(@SW_SHOW)
 #EndRegion ### END Koda GUI section ###
 
-Global $helpStr = StringFormat("　请将txt文件或文件夹拖到此文本框中，支持多个一起拖，只支持遍历一级文件夹\r\n\r\n联系与反馈，常见问题解答：\r\n　网站：http://17memo.com\r\n　邮箱或QQ：31531640@qq.com\r\n")
+Global $helpStr = StringFormat("　请将文件夹拖到此文本框中，支持多个一起拖，\r\n\r\n需要先安装ImageMagick, 见http://www.imagemagick.org/script/binary-releases.php#windows \r\n联系与反馈，常见问题解答：\r\n　网站：http://17memo.com\r\n　邮箱或QQ：31531640@qq.com\r\n")
 
 
 #include <File.au3>

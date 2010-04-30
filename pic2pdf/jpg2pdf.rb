@@ -11,6 +11,7 @@ require 'optparse'
 require 'mini_magick'
 require 'prawn'
 require 'fileutils'
+require 'yaml'
 
 exit if Object.const_defined?(:Ocra)
 
@@ -41,6 +42,10 @@ optparse.parse!
 
 input_path = ARGV[0]
 
+yml = YAML.load_file('pdf.yml')
+#puts yml.inspect
+#exit
+
 if !File.directory?(input_path)
   $stderr.puts '只接受文件夹'
   exit
@@ -61,29 +66,24 @@ if File.exist?(temp_path)
 end
 Dir.mkdir(temp_path) 
 
-$pdf_option = {:page_size=>[396.85, 575.43], :margin=>[0,0,0,2], :compress=>true}
+$pdf_option = {:page_size=>yml[:page_size], :margin=>yml[:margin], :compress=>true}
 
 output_file_name = File.join(output_path, "#{base_name}.pdf")
 
-#glob_input_file = File.join(input_path, '**/*.jpg')
-#glob_input_file.gsub!('\\', '/')
-#glob_input_file = input_path+'/**/*.jpg'
-#glob_input_file = '"'+glob_input_file+'"'
-puts '='*80
-#puts glob_input_file
+puts '='*79
 
 Prawn::Document.generate("#{output_file_name}", $pdf_option) do
   first_page = true
-  Dir.glob('**/*.jpg') do |f|
+  Dir.glob('**/*.{jpg,gif,png,tiff}') do |f|
     puts f
     image = MiniMagick::Image.from_file(f)
     image.rotate "90" if image[:width]>image[:height] 
-    image.resize "784x1050"
+    image.resize yml[:jpg_size]
     file_name = File.join(temp_path, File.basename(f))
     image.write(file_name)
     start_new_page if !first_page
     first_page = false
-    image file_name , :fit =>[396.85, 575.43]
+    image file_name , :fit =>yml[:page_size]
   end
 end
 

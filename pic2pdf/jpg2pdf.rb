@@ -1,34 +1,85 @@
 
-# kindle :DXçš„824*1200çš„åˆ†è¾¨ç‡
-# æˆ‘çš„è®¾ç½®æ˜¯824*1200æˆ–780*1080ï¼Œè¿™æ ·ä¼šå¥½å¾ˆå¤šã€‚
-# è¥¿ç“œæ˜¯784*1050 å¦‚æœåªè€ƒè™‘DXï¼Œå°±ç”¨784  ä¼šå°10%å·¦å³
-# é“œæ¿å»ºè®®æ˜¯æˆ‘å»ºè®®å°±ç”¨824*1200
-# çœ‹æ‚å¿—ç”¨1100*1600è¿™ä¸ªåˆ†è¾¨ç‡ï¼Œæ¨ªå±ç«–å±æ•ˆæœéƒ½ä¼šå¾ˆä¸é”™ï¼Œæ¼«ç”»æœ‰é”¯é½¿
+# kindle :DXµÄ824*1200µÄ·Ö±æÂÊ
+# ÎÒµÄÉèÖÃÊÇ824*1200»ò780*1080£¬ÕâÑù»áºÃºÜ¶à¡£
+# Î÷¹ÏÊÇ784*1050 Èç¹ûÖ»¿¼ÂÇDX£¬¾ÍÓÃ784  »áĞ¡10%×óÓÒ
+# Í­°å½¨ÒéÊÇÎÒ½¨Òé¾ÍÓÃ824*1200
+# ¿´ÔÓÖ¾ÓÃ1100*1600Õâ¸ö·Ö±æÂÊ£¬ºáÆÁÊúÆÁĞ§¹û¶¼»áºÜ²»´í£¬Âş»­ÓĞ¾â³İ
 
 
 require 'mini_magick'
 require 'prawn'
+require 'fileutils'
+
+options = {}
+
+optparse = OptionParser.new do|opts|
+  # Set a banner, displayed at the top
+  # of the help screen.
+  opts.banner =<<'EOF'
+ÅúÁ¿×ª»»jpgÎÄ¼ş¼ĞÎªpdfÎÄµµ(Kindle dxÊ¹ÓÃ£©
+Ê¹ÓÃ·½·¨:
+  jpg2pdf [options] jpg_dir_name"
+EOF
+  options[:output] = ''
+  opts.on( '-o', '--output output_name', 'Ö¸¶¨Êä³öÂ·¾¶') do |f|
+    options[:output] = f 
+  end
+
+  opts.on( '-h', '--help', '°ïÖú' ) do
+    puts opts
+    exit
+  end
+end
+
+
+optparse.parse!
 
 input_path = ARGV[0]
+
+if !File.directory?(input_path)
+  $stderr.puts 'Ö»½ÓÊÜÎÄ¼ş¼Ğ'
+  exit
+end
+puts input_path
 base_name = File.basename(input_path)
-temp_path = 'pdf_out_temp'
+
+output_path = input_path
+if options[:output]!=''
+  output_path = options[:output]
+end
+
+temp_path = 'upig_pdf_out_temp'
+if File.exist?(temp_path)
+  $stderr.puts "#{temp_path} ÒÑ¾­´æÔÚ£¬ÇëÏÈÉ¾³ıÖ®" 
+  exit
+end
 
 $pdf_option = {:page_size=>[396.85, 575.43], :margin=>[0,0,0,2], :compress=>true}
 
 Dir.mkdir(temp_path) unless File.exist?(temp_path)
-output_file_name = "#{base_name}.pdf"
+output_file_name = File.join(output_path, "#{base_name}.pdf")
+puts output_file_name
 
+glob_input_file = File.join(input_path, '**/*.jpg')
+glob_input_file.gsub!('\\', '/')
+puts '='*80
 Prawn::Document.generate("#{output_file_name}", $pdf_option) do
   first_page = true
-  Dir.glob(File.join(input_path, '*.jpg')) do |f|
+  Dir.glob(glob_input_file) do |f|
+    puts f
     image = MiniMagick::Image.from_file(f)
     image.rotate "90" if image[:width]>image[:height] 
     image.resize "784x1050"
     file_name = File.join(temp_path, File.basename(f))
     image.write(file_name)
+    puts file_name
     start_new_page if !first_page
     first_page = false
     image file_name , :fit =>[396.85, 575.43]
   end
 end
+
+FileUtils.rm_r(temp_path)
+
+
 

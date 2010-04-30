@@ -252,35 +252,22 @@ Func IceLogMsg($LogStr)
 	GUICtrlSetData($ctlEditHelp, $tempLine)	
 EndFunc
 
-Func ConvertFile($inputFileName)	
-	Local $szDrive, $szDir, $inputFileTitle, $inputFileExt
-	_PathSplit($inputFileName, $szDrive, $szDir, $inputFileTitle, $inputFileExt)
-	
-	
-	Local $workPath = $szDrive&$szDir
-
+Func ConvertDir($strDir)
 	Local $pathOutPut = GUICtrlRead($ctlEditPathOutput)&"\"
 	If StringIsSpace(GUICtrlRead($ctlEditPathOutput)) Then $pathOutPut=""
 	If $g_bUseOutputPath==False Then $pathOutPut=""
-	If $inputFileExt == ".prc" Or $inputFileExt == ".exe" Or $inputFileExt == ".mobi" Then Return
-	$g_totalFileCount += 1
-	IceLogMsg("["&$g_totalFileCount&"]  正在转换中，请稍候: " & $inputFileTitle & $inputFileExt)
-	
-	
-	
-	Local $cvtFileName = 	$inputFileName
 	Local $outputParam=""
-	If $pathOutPut<>"" Then $outputParam = " --output=""" & $pathOutPut & $inputFileTitle & ".prc"" "
+	If $pathOutPut<>"" Then $outputParam = " --output=""" & $pathOutPut 
 
- ;   Run it! upigcmd.exe
-;	Local $cmd = @ComSpec & " /c " & $g_ToolName &" "& $encodingParm & $publisher & $debugParam & $outputParam & GUICtrlRead($ctlEditParamTxt2lrf) & " """ & $cvtFileName & """ " &$debugParam2   
-;	ConsoleWrite($cmd)
+	$g_totalFileCount += 1
+	IceLogMsg("["&$g_totalFileCount&"]  正在转换中，请稍候: " & $strDir)
+
 	Local $script_path = FileGetShortName(@ScriptDir)
 
-	Local $cmd = @ComSpec & " /c """"" & $script_path& '\'&$g_ToolName &""" "& $outputParam & " """ & $cvtFileName & """""" 
+	Local $cmd = @ComSpec & " /c """"" & $script_path& '\'&$g_ToolName &""" "& $outputParam & " """ & $strDir & """""" 
 	
 	ConsoleWrite($cmd)
-	Local $pID = Run($cmd, $workPath, @SW_HIDE, $STDERR_CHILD+$STDOUT_CHILD)
+	Local $pID = Run($cmd, $strDir, @SW_HIDE, $STDERR_CHILD+$STDOUT_CHILD)
 	While ProcessExists($pID)
 		Sleep(500)
 	WEnd
@@ -288,32 +275,8 @@ Func ConvertFile($inputFileName)
 	Local $errMsg = StderrRead($pID)
 	If ($errMsg <> "") Then
 		$g_errCount += 1
-		IceLogMsg(@CRLF&"文件转换出错: " & $inputFileName & @CRLF & $errMsg & @CRLF)
+		IceLogMsg(@CRLF&"文件转换出错: " & $strDir & @CRLF & $errMsg & @CRLF)
 	EndIf
-	if $g_bRelease==True Then 
-;		FileDelete($tempTxtFileName)
-	EndIf
-EndFunc  
-
-Func ConvertDir($strDir)
-	Local $search = FileFindFirstFile($strDir & "\*.txt")
-	Dim $FileListmine[1]
-	Local $counttemp = 0
-	While 1
-		Local $filenameTemp = FileFindNextFile($search)
-		If @error Then ExitLoop
-		$counttemp += 1
-		_ArrayAdd($FileListmine, $strDir & "\" & $filenameTemp)
-	WEnd
-	$FileListmine[0] = $counttemp
-	;_ArrayDisplay($FileListmine)
-	
-	;$FileList = _FileListToArray ($strDir, "*.txt")
-	GUICtrlSetData($ctlProgressInd, 0)
-	For $c = 1 To $FileListmine[0]
-		ConvertFile($FileListmine[$c])
-		GUICtrlSetData($ctlProgressInd, $c * 100 / $FileListmine[0])
-	Next
 EndFunc
 
 Func ConvertDirFileMultiLine($strMultiLine)
@@ -333,13 +296,9 @@ Func ConvertDirFileMultiLine($strMultiLine)
 			MsgBox(4096, "Error", "Could not obtain attributes.")
 			Return
 		EndIf
-		If StringInStr($fileAttr, "D") Then
-			ConvertDir($FileListArr[$c])
-		Else
-			GUICtrlSetData($ctlProgressInd, 50)
-			ConvertFile($FileListArr[$c])
-			GUICtrlSetData($ctlProgressInd, 100)
-		EndIf
+		GUICtrlSetData($ctlProgressInd, 50)
+		ConvertDir($FileListArr[$c])
+		GUICtrlSetData($ctlProgressInd, 100)
 	Next
 	Local $costTime = TimerDiff($beginTimeStamp)
 	If ($g_errCount <> 0) Then

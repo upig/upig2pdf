@@ -6,9 +6,13 @@
 # 看杂志用1100*1600这个分辨率，横屏竖屏效果都会很不错，漫画有锯齿
 
 
+require 'rubygems'
+require 'optparse'
 require 'mini_magick'
 require 'prawn'
 require 'fileutils'
+
+exit if Object.const_defined?(:Ocra)
 
 options = {}
 puts ARGV.inspect

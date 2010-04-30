@@ -49,7 +49,8 @@ if options[:output]!=''
   output_path = options[:output]
 end
 
-temp_path = 'upig_pdf_out_temp'
+script_path = File.expand_path(File.dirname(__FILE__))
+temp_path = File.join(script_path, 'upig_pdf_out_temp')
 if File.exist?(temp_path)
   $stderr.puts "#{temp_path} 已经存在，请先删除之" 
   exit
@@ -59,21 +60,23 @@ Dir.mkdir(temp_path)
 $pdf_option = {:page_size=>[396.85, 575.43], :margin=>[0,0,0,2], :compress=>true}
 
 output_file_name = File.join(output_path, "#{base_name}.pdf")
-puts output_file_name
 
-glob_input_file = File.join(input_path, '**/*.jpg')
-glob_input_file.gsub!('\\', '/')
+#glob_input_file = File.join(input_path, '**/*.jpg')
+#glob_input_file.gsub!('\\', '/')
+#glob_input_file = input_path+'/**/*.jpg'
+#glob_input_file = '"'+glob_input_file+'"'
 puts '='*80
+#puts glob_input_file
+
 Prawn::Document.generate("#{output_file_name}", $pdf_option) do
   first_page = true
-  Dir.glob(glob_input_file) do |f|
+  Dir.glob('**/*.jpg') do |f|
     puts f
     image = MiniMagick::Image.from_file(f)
     image.rotate "90" if image[:width]>image[:height] 
     image.resize "784x1050"
     file_name = File.join(temp_path, File.basename(f))
     image.write(file_name)
-    puts file_name
     start_new_page if !first_page
     first_page = false
     image file_name , :fit =>[396.85, 575.43]

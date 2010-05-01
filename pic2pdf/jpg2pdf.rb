@@ -15,7 +15,7 @@ require 'yaml'
 
 exit if Object.const_defined?(:Ocra)
 
-puts ARGV.inspect
+#puts ARGV.inspect
 options = {}
 
 optparse = OptionParser.new do|opts|
@@ -38,6 +38,7 @@ EOF
 
   opts.on( '-h', '--help', '帮助' ) do
     puts opts
+    `pause`
     exit
   end
 end
@@ -57,13 +58,14 @@ gamma: 1
 ')
 end
 
-puts yml.inspect
+#puts yml.inspect
 
 if !File.directory?(input_path)
   $stderr.puts '只接受文件夹'
+  `pause`
   exit
 end
-puts input_path
+#puts input_path
 base_name = File.basename(input_path)
 output_path =input_path[0...-base_name.length] 
 
@@ -79,26 +81,29 @@ $pdf_option = {:page_size=>yml["page_size"], :margin=>yml["margin"], :compress=>
 
 output_file_name = File.join(output_path, "#{base_name}.pdf")
 
-puts '='*79
+#puts '='*79
 
 
-Prawn::Document.generate("#{output_file_name}", $pdf_option) do
-  first_page = true
-  Dir.glob('**/*.{jpg,gif,png,tiff}') do |f|
-    puts f
-    image = MiniMagick::Image.from_file(f)
-    image.rotate "90" if image[:width]>image[:height] 
-    image.resize yml["jpg_size"]
-    image.gamma yml["gamma"] if yml["gamma"]!=1
-    file_name = File.join(temp_path, File.basename(f))
-    image.write(file_name)
-    start_new_page if !first_page
-    first_page = false
-    image file_name , :fit =>yml["page_size"]
+begin
+  Prawn::Document.generate("#{output_file_name}", $pdf_option) do
+    first_page = true
+    Dir.glob('**/*.{jpg,gif,png,tiff}') do |f|
+      puts f
+      image = MiniMagick::Image.from_file(f)
+      image.rotate "90" if image[:width]>image[:height] 
+      image.resize yml["jpg_size"]
+      image.gamma yml["gamma"] if yml["gamma"]!=1
+      file_name = File.join(temp_path, File.basename(f))
+      image.write(file_name)
+      start_new_page if !first_page
+      first_page = false
+      image file_name , :fit =>yml["page_size"]
+    end
   end
+  FileUtils.rm_r(temp_path)
+  puts "Done"
+rescue
+`pause`
 end
-
-FileUtils.rm_r(temp_path)
-
 
 

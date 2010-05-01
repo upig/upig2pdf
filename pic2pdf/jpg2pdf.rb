@@ -12,6 +12,7 @@ require 'mini_magick'
 require 'prawn'
 require 'fileutils'
 require 'yaml'
+require 'natural_sort_kernel'
 
 exit if Object.const_defined?(:Ocra)
 
@@ -86,7 +87,7 @@ output_file_name = File.join(output_path, "#{base_name}.pdf")
 begin
   Prawn::Document.generate("#{output_file_name}", $pdf_option) do
     first_page = true
-    Dir.glob('**/*.{jpg,gif,png,tiff}') do |f|
+    Dir.glob('**/*.{jpg,gif,png,tiff}').natural_sort.each do |f|
       puts f
       image = MiniMagick::Image.from_file(f)
       image.rotate "90" if image[:width]>image[:height] 
@@ -100,10 +101,14 @@ begin
     end
   end
   puts "Done"
-rescue
-  puts "An error occurred: ",$!
+rescue => detail
+  print detail.backtrace.join("\n")
   puts "按任意键退出"
   `pause`
 end
+
+#rescue
+  #puts "An error occurred: ",$!
+#end
 
 

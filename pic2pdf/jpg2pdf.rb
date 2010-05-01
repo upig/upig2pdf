@@ -52,7 +52,9 @@ if options[:yml]!=''
 else
   yml = YAML.load('jpg_size: 784x1050
 page_size: [396.85, 575.43]
-margin: [0, 0, 0, 2]')
+margin: [0, 0, 0, 0]
+gamma: 0.9
+')
 end
 
 puts yml.inspect
@@ -91,6 +93,7 @@ Prawn::Document.generate("#{output_file_name}", $pdf_option) do
     image = MiniMagick::Image.from_file(f)
     image.rotate "90" if image[:width]>image[:height] 
     image.resize yml["jpg_size"]
+    image.gamma yml["gamma"]
     file_name = File.join(temp_path, File.basename(f))
     image.write(file_name)
     start_new_page if !first_page

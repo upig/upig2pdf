@@ -269,7 +269,7 @@ Func ConvertDir($strDir)
 	Local $cmd = @ComSpec & " /c """"" & $script_path& '\'&$g_ToolName &""" "& $outputParam &$yml_file& " """ & $strDir & """""" 
 	
 	ConsoleWrite($cmd)
-	Local $pID = Run($cmd, $strDir, @SW_SHOW)
+	Local $pID = Run($cmd, $strDir, @SW_MINIMIZE)
 	While ProcessExists($pID)
 		Sleep(500)
 	WEnd

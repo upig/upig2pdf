@@ -258,13 +258,15 @@ Func ConvertDir($strDir)
 	If $g_bUseOutputPath==False Then $pathOutPut=""
 	Local $outputParam=""
 	If $pathOutPut<>"" Then $outputParam = " --output=""" & $pathOutPut &""""
+	
 
 	$g_totalFileCount += 1
 	IceLogMsg("["&$g_totalFileCount&"]  正在转换中，请稍候: " & $strDir)
 
 	Local $script_path = FileGetShortName(@ScriptDir)
+	Local $yml_file = " --yml="""&$script_path&'\pdf.yml"'
 
-	Local $cmd = @ComSpec & " /c """"" & $script_path& '\'&$g_ToolName &""" "& $outputParam & " """ & $strDir & """""" 
+	Local $cmd = @ComSpec & " /c """"" & $script_path& '\'&$g_ToolName &""" "& $outputParam &$yml_file& " """ & $strDir & """""" 
 	
 	ConsoleWrite($cmd)
 	Local $pID = Run($cmd, $strDir, @SW_HIDE, $STDERR_CHILD+$STDOUT_CHILD)

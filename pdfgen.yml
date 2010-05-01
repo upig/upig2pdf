@@ -1,0 +1,6 @@
+page_size: [396.85, 575.43] #Kindle DX的pdf标准大小，一般不用改
+margin: [0, 0, 0, 2] # 页边距, 一般不用改 
+font_size: 14 #字体
+indent_paragraphs: 28 #首行缩进
+leading: 0 #行间距
+final_gap: true #段间留白 true or false

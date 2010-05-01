@@ -1,0 +1,6 @@
+jpg_size: 784x1050 #jpga文件的像素调整值 
+page_size: [396.85, 575.43] #Kindle DX的pdf标准大小，一般不用改
+margin: [0, 0, 0, 0] # 页边距, 一般不用改 
+gamma: 0.9 #gamma 越小 画面越黑 比如0.8
+
+    

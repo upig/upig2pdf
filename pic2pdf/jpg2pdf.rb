@@ -53,7 +53,7 @@ else
   yml = YAML.load('jpg_size: 784x1050
 page_size: [396.85, 575.43]
 margin: [0, 0, 0, 0]
-gamma: 0.9
+gamma: 1
 ')
 end
 
@@ -72,11 +72,7 @@ if options[:output]!=''
 end
 
 script_path = File.expand_path(File.dirname(__FILE__))
-temp_path = File.join(output_path, '____upig_pdf_out_temp')
-#if File.exist?(temp_path)
-  #$stderr.puts "#{temp_path} 已经存在，请先删除之" 
-  #exit
-#end
+temp_path = File.join(script_path, '____upig_pdf_out_temp')
 Dir.mkdir(temp_path) unless File.exist?(temp_path)
 
 $pdf_option = {:page_size=>yml["page_size"], :margin=>yml["margin"], :compress=>true}
@@ -93,7 +89,7 @@ Prawn::Document.generate("#{output_file_name}", $pdf_option) do
     image = MiniMagick::Image.from_file(f)
     image.rotate "90" if image[:width]>image[:height] 
     image.resize yml["jpg_size"]
-    image.gamma yml["gamma"]
+    image.gamma yml["gamma"] if yml["gamma"]!=1
     file_name = File.join(temp_path, File.basename(f))
     image.write(file_name)
     start_new_page if !first_page

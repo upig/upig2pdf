@@ -271,6 +271,8 @@ Func ConvertDir($strDir)
 	ConsoleWrite($cmd)
 	Local $pID = Run($cmd, $strDir, @SW_HIDE, $STDERR_CHILD+$STDOUT_CHILD)
 	While ProcessExists($pID)
+		Local $logMsg = StdoutRead($pID)
+		if $logMsg<>"" then IceLogMsg($logMsg)
 		Sleep(500)
 	WEnd
 	;IceLogMsg("["&$g_totalFileCount&"]  ×ª»»Íê±Ï" & $inputFileTitle & $inputFileExt)

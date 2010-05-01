@@ -73,8 +73,7 @@ if options[:output]!=''
   output_path = options[:output]
 end
 
-script_path = File.expand_path(File.dirname(__FILE__))
-temp_path = File.join(script_path, '____upig_pdf_out_temp')
+temp_path = 'C:/____upig_pdf_out_temp'
 Dir.mkdir(temp_path) unless File.exist?(temp_path)
 
 $pdf_option = {:page_size=>yml["page_size"], :margin=>yml["margin"], :compress=>true}
@@ -93,17 +92,18 @@ begin
       image.rotate "90" if image[:width]>image[:height] 
       image.resize yml["jpg_size"]
       image.gamma yml["gamma"] if yml["gamma"]!=1
-      file_name = File.join(temp_path, File.basename(f))
+      file_name = File.join(temp_path, 'sample.jpg')
       image.write(file_name)
       start_new_page if !first_page
       first_page = false
       image file_name , :fit =>yml["page_size"]
     end
   end
-  FileUtils.rm_r(temp_path)
   puts "Done"
 rescue
-`pause`
+  puts "An error occurred: ",$!
+  puts "按任意键退出"
+  `pause`
 end
 
 
